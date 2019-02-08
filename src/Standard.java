@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Standard {
 
@@ -44,8 +45,20 @@ public class Standard {
                     case "":
                         break;
                     case "find":
-                        if (rules(input))
-                            System.out.println(input.toLowerCase().trim().split(" ")[1]);
+                        if (rules(input)){
+                            try (Stream<Path> stream = Files.find(Paths.get(input.split(" ")[1]), 5,
+                                    (path, attr) -> path.getFileName().toString().equals("ts_events.log") )) {//rolenuser.sql
+                                //System.out.println(stream.findAny().isPresent());
+                                stream.forEach(System.out::println);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (Exception e){
+                                e.printStackTrace();
+                                System.out.println(e.toString());
+                            }
+                        }
+
+                            //System.out.println(input.toLowerCase().trim().split(" ")[1]);
                         break;
                     case "ls":
                         if (rules(input))
@@ -90,14 +103,18 @@ public class Standard {
             System.out.println("Cannot find the path specified.");
         } else {
 
-            List<File> filesInFolder = Files.list(Paths.get(dir))
-                    .filter(Files::isRegularFile)
-                    .sorted()
-                    .map(Path::toFile)
-                    .collect(Collectors.toList());
+            try {
+                List<File> filesInFolder = Files.list(Paths.get(dir))
+                        //.filter(Files::isRegularFile)
+                        .sorted()
+                        .map(Path::toFile)
+                        .collect(Collectors.toList());
 
-            for (File fineName : filesInFolder) {
-                System.out.println(fineName.toString().substring(dir.length() + 1));
+                for (File fineName : filesInFolder) {
+                    System.out.println(fineName.toString().substring(dir.length()));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
