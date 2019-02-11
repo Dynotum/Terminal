@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Standard {
 
     private String line = null;
     private BlockingQueue<String> queue = new ArrayBlockingQueue<>(22);
+    private Finder finder;
 
     Thread stdin = new Thread(() -> {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -44,20 +44,14 @@ public class Standard {
                         break;
                     case "":
                         break;
+                    case "clear":
+
+                        break;
                     case "find":
                         if (rules(input)){
-                            try (Stream<Path> stream = Files.find(Paths.get(input.split(" ")[1]), 5,
-                                    (path, attr) -> path.getFileName().toString().equals("ts_events.log") )) {//rolenuser.sql
-                                //System.out.println(stream.findAny().isPresent());
-                                stream.forEach(System.out::println);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (Exception e){
-                                e.printStackTrace();
-                                System.out.println(e.toString());
-                            }
+                            finder = new Finder(input.split(" ")[1]);
+                            //stdin.join(1000 * 20);
                         }
-
                             //System.out.println(input.toLowerCase().trim().split(" ")[1]);
                         break;
                     case "ls":
@@ -68,23 +62,6 @@ public class Standard {
                         System.out.println("\'" + line + "\' it is not recognized as an internal command.");
                         break;
                 }
-//                try (Stream<Path> paths = Files.list(Paths.get("C:\\Users\\csedano\\Documents"))) {
-//                    paths
-//                            .filter(Files::isRegularFile)
-//
-//                            .sorted()
-////                            .collect(Collectors.toList());
-//                            .forEach(System.out::println);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
-//                if (input.startsWith("scan")) {
-//                    //scan path
-//                    System.out.println("scanning " + input.split(" ")[1]);
-//                }
-
-
                 System.out.print("> ");
             } catch (InterruptedException e) {
                 e.printStackTrace();
