@@ -1,7 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 
 public class Finder {
@@ -10,32 +9,16 @@ public class Finder {
     private List<String> listF = new ArrayList<>();
     private String nameFile;
     private String[] getDisks = hasMoreDisks();
-    private String osName = System.getProperty("os.name").toLowerCase();
-
+    private OS os = OS.getInstance();                //Initialized Operating System
 
     public Finder(String nameFile) {
         this.nameFile = nameFile;
-        //Initialized Operating System
-        OS os = new OS();
 
-        System.out.println("Searching in: ");
-        if (osName.contains(os.getOsName().windows.toString())) {
-            if (getDisks.length > 1) {
-                for (String disk : getDisks) {
-                    System.out.println(disk);
-                }
-            } else {
-                System.out.println(getDisks);
-            }
-        } else if (osName.contains(os.getOsName().linux.toString())) {
-            System.out.println("Hey Linux!! " + getDisks[0]); //TODO
-        } else {
-            System.out.println("OS not supporting yet");
-        }
+        OSDisk();
 
         //TODO  - CREAR UN HILO POR CADA DISCO PARA LA BUSQUEDA.
         //        CREAR DATABASE PARA INDEX
-        
+
 
 //        localdisk.start();
 //        diskD.start();
@@ -108,5 +91,22 @@ public class Finder {
         }
 
         return pathName;
+    }
+
+    private void OSDisk(){
+        System.out.printf("Searching in %s:\n",os.get_OS_NAME());
+        if (os.get_OS_NAME().contains(os.getEnumOSName().windows.toString())) {
+            if (getDisks.length > 1) {
+                for (String disk : getDisks) {
+                    System.out.println(disk);
+                }
+            } else {
+                System.out.println(getDisks[0]);
+            }
+        } else if (os.get_OS_NAME().contains(os.getEnumOSName().linux.toString())) {
+            System.out.println("Hey Linux!! " + getDisks[0]); //TODO
+        } else {
+            System.out.println("OS not supporting yet");
+        }
     }
 }

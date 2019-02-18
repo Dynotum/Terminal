@@ -1,33 +1,45 @@
+/*
+SINGLETON class
+*/
 public class OS {
-    private OSs osName = null;
+    private static OS osInstance = null;
+    private enumOS enumOSName = null;
+    private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
 
-    public OSs getOsName() {
-        return osName;
-    }
-
-    public enum OSs {
+    public enum enumOS {
         windows,
         linux,
         mac,
         solaris
     }
 
-    public OS() {
-        String os = System.getProperty("os.name").toLowerCase();
+    private OS() {
 
-        if (getOsName() == null) {
-            if (os.contains("windows")) {
-                osName = OSs.windows;
-            } else if (os.contains("linux")) {
-                osName = OSs.linux;
-            } else if (os.contains("solaris")) {
-                osName = OSs.solaris;
-            } else if (os.contains("mac")) {
-                osName = OSs.mac;
-            }
+        if (OS_NAME.contains("windows")) {
+            enumOSName = enumOSName.windows;
+        } else if (OS_NAME.contains("linux")) {
+            enumOSName = enumOSName.linux;
+        } else if (OS_NAME.contains("solaris")) {
+            enumOSName = enumOSName.solaris;
+        } else if (OS_NAME.contains("mac")) {
+            enumOSName = enumOSName.mac;
         }
     }
 
+    public static OS getInstance() {
+        if (osInstance == null) {
+            osInstance = new OS();
+        }
+        return osInstance;
+    }
+
+    public enumOS getEnumOSName() {
+        return enumOSName;
+    }
+
+    public static String get_OS_NAME() {
+        return OS_NAME;
+    }
 
 
 }
