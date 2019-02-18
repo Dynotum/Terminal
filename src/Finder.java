@@ -18,20 +18,24 @@ public class Finder {
         //Initialized Operating System
         OS os = new OS();
 
-        if (osName.contains(os.getOsName().windows.toString())){
-            System.out.println("Searching in: ");
-            if (getDisks.length > 1){
-                for (String disk : getDisks){
+        System.out.println("Searching in: ");
+        if (osName.contains(os.getOsName().windows.toString())) {
+            if (getDisks.length > 1) {
+                for (String disk : getDisks) {
                     System.out.println(disk);
                 }
-            }else {
+            } else {
                 System.out.println(getDisks);
             }
-        } else if (osName.contains(os.getOsName().linux.toString())){
-            System.out.println("Hey Linux!! " + getDisks); //TODO
+        } else if (osName.contains(os.getOsName().linux.toString())) {
+            System.out.println("Hey Linux!! " + getDisks[0]); //TODO
         } else {
-            System.out.println("OS not sopporting yet");
+            System.out.println("OS not supporting yet");
         }
+
+        //TODO  - CREAR UN HILO POR CADA DISCO PARA LA BUSQUEDA.
+        //        CREAR DATABASE PARA INDEX
+        
 
 //        localdisk.start();
 //        diskD.start();
