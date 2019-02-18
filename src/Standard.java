@@ -16,6 +16,7 @@ public class Standard {
     private String line = null;
     private BlockingQueue<String> queue = new ArrayBlockingQueue<>(22);
     private Finder finder;
+    public OS os = OS.getInstance();
 
     Thread stdin = new Thread(() -> {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -45,18 +46,17 @@ public class Standard {
                     case "":
                         break;
                     case "clear":
-
+                        clear();
                         break;
                     case "find":
-                        if (rules(input)){
+                        if (rules(input)) {
                             finder = new Finder(input.split(" ")[1]);
-                            //stdin.join(1000 * 20);
                         }
-                            //System.out.println(input.toLowerCase().trim().split(" ")[1]);
                         break;
                     case "ls":
-                        if (rules(input))
+                        if (rules(input)){
                             listFilesInDirectory(input.split(" ")[1]);
+                        }
                         break;
                     default:
                         System.out.println("\'" + line + "\' it is not recognized as an internal command.");
@@ -108,5 +108,20 @@ public class Standard {
         }
         return flag;
     }
-}
 
+    public void clear() {
+        //this clear screen,move cursor to the first row, first column
+        final String CLEAR_CONSOLE_UNIX = "\033[H\033[2J";
+
+        try {
+            // WINDOWS only works on cmd or powershell
+            if (os.get_OS_NAME().contains(os.getEnumOSName().windows.toString())) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.println(CLEAR_CONSOLE_UNIX);
+            }
+        } catch (IOException | InterruptedException e) {
+            //ignored
+        }
+    }
+}
