@@ -1,7 +1,5 @@
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -10,18 +8,36 @@ public class Finder {
 
     private List<String> list = new ArrayList<>();
     private List<String> listF = new ArrayList<>();
-    HashMap<String, String> hashFile = new HashMap<>();
-
     private String nameFile;
+    private String[] getDisks = hasMoreDisks();
+    private String osName = System.getProperty("os.name").toLowerCase();
+
 
     public Finder(String nameFile) {
         this.nameFile = nameFile;
+        //Initialized Operating System
+        OS os = new OS();
 
-        localdisk.start();
-        diskD.start();
+        if (osName.contains(os.getOsName().windows.toString())){
+            System.out.println("Searching in: ");
+            if (getDisks.length > 1){
+                for (String disk : getDisks){
+                    System.out.println(disk);
+                }
+            }else {
+                System.out.println(getDisks);
+            }
+        } else if (osName.contains(os.getOsName().linux.toString())){
+            System.out.println("Hey Linux!! " + getDisks); //TODO
+        } else {
+            System.out.println("OS not sopporting yet");
+        }
+
+//        localdisk.start();
+//        diskD.start();
         // out.start();
 
-        synchronized (localdisk) {
+/*        synchronized (localdisk) {
             try {
                 localdisk.wait();
                 //diskD.wait();
@@ -31,18 +47,10 @@ public class Finder {
             for (String s : list) {
                 System.out.println(s);
             }
-   /*         System.out.println("SALUDO: " + listF.size());
-
-            System.out.println(listF.get((int) (Math.random() * listF.size() - 1) + 1));
-            System.out.println(listF.get((int) (Math.random() * listF.size() - 1) + 1));
-            System.out.println(listF.get((int) (Math.random() * listF.size() - 1) + 1));
-            System.out.println(listF.get((int) (Math.random() * listF.size() - 1) + 1));*/
-            Stream.of(hashFile.keySet().toArray())
-                    .forEach(System.out::println);
-        }
+        }*/
     }
 
-    Thread localdisk = new Thread(() -> {
+/*    Thread localdisk = new Thread(() -> {
         find(nameFile, new File("C:\\"));
     });
 
@@ -59,7 +67,7 @@ public class Finder {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    });
+    });*/
 
     // find VBoxUSB.inf
     public void find(String fileToFind, File newFile) {
@@ -69,7 +77,6 @@ public class Finder {
         if (listFile != null) {
             for (File file : listFile) {
                 listF.add(file.getName()); //file.getParent()
-                hashFile.put(file.getName(), file.getParent());
                 if (file.isDirectory()) {
                     find(fileToFind, file);
                 } else if (fileToFind.equalsIgnoreCase(file.getName())) {
@@ -84,19 +91,18 @@ public class Finder {
         return newFile.isDirectory();
     }
 
-    private File[] hasMoreDisks() {
+    private String[] hasMoreDisks() {
         File[] paths;
-        FileSystemView fsv = FileSystemView.getFileSystemView();
+        String[] pathName;
 
-// returns pathnames for files and directory
+        // returns pathnames for files and directory
         paths = File.listRoots();
+        pathName = new String[paths.length];
 
-// for each pathname in pathname array
-/*        for (File path : paths) {
-            // prints file and directory paths
-            System.out.println("Drive Name: " + path);
-            //System.out.println("Description: " + fsv.getSystemTypeDescription(path));
-        }*/
-        return paths;
+        for (int i = 0; i < paths.length; i++) {
+            pathName[i] = paths[i].toString();
+        }
+
+        return pathName;
     }
 }
