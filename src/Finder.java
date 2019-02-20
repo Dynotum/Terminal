@@ -1,4 +1,7 @@
 import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +17,8 @@ public class Finder {
     public Finder(String nameFile) {
         this.nameFile = nameFile;
 
-        OSDisk();
+//        OSDisk();
+        testDB();
 
         //TODO  - CREAR UN HILO POR CADA DISCO PARA LA BUSQUEDA.
         //        CREAR DATABASE PARA INDEX
@@ -63,7 +67,7 @@ public class Finder {
 
         if (listFile != null) {
             for (File file : listFile) {
-                listF.add(file.getName()); //file.getParent()
+                //listF.add(file.getName()); //file.getParent()
                 if (file.isDirectory()) {
                     find(fileToFind, file);
                 } else if (fileToFind.equalsIgnoreCase(file.getName())) {
@@ -93,8 +97,8 @@ public class Finder {
         return pathName;
     }
 
-    private void OSDisk(){
-        System.out.printf("Searching in %s:\n",os.get_OS_NAME());
+    private void OSDisk() {
+        System.out.printf("Searching in %s:\n", os.get_OS_NAME());
         if (os.get_OS_NAME().contains(os.getEnumOSName().windows.toString())) {
             if (getDisks.length > 1) {
                 for (String disk : getDisks) {
@@ -104,9 +108,25 @@ public class Finder {
                 System.out.println(getDisks[0]);
             }
         } else if (os.get_OS_NAME().contains(os.getEnumOSName().linux.toString())) {
-            System.out.println("Hey Linux!! " + getDisks[0]); //TODO
+            System.out.println("Hey Linux!! " + getDisks[0]);
         } else {
             System.out.println("OS not supporting yet");
+        }
+    }
+
+    public void testDB() {
+        h2DBs db = h2DBs.getInstance();
+        Statement statement = h2DBs.getStatement();
+
+        String sqlString = "SELECT * FROM PERSONS";
+        ResultSet resultSet = null;
+        try {
+            resultSet = statement.executeQuery(sqlString);
+            while (resultSet.next()) {
+                System.out.printf("%s", resultSet.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

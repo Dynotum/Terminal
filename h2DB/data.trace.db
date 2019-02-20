@@ -80,9 +80,9 @@ org.h2.message.DbException: Wrong user name or password [28000-197]
 	at org.h2.Driver.connect(Driver.java:69)
 	at java.sql.DriverManager.getConnection(DriverManager.java:664)
 	at java.sql.DriverManager.getConnection(DriverManager.java:270)
-	at h2Connection.connect(h2Connection.java:10)
-	at h2Connection.consultar(h2Connection.java:20)
-	at h2Connection.main(h2Connection.java:40)
+	at h2DBs.connect(h2DBs.java:10)
+	at h2DBs.consultar(h2DBs.java:20)
+	at h2DBs.main(h2DBs.java:40)
 Caused by: org.h2.jdbc.JdbcSQLException: Wrong user name or password [28000-197]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:357)
 	... 17 more
