@@ -17,48 +17,26 @@ public class Finder {
     public Finder(String nameFile) {
         this.nameFile = nameFile;
 
-//        OSDisk();
-        testDB();
+        OSDisk();
+        localdisk.start();
 
-        //TODO  - CREAR UN HILO POR CADA DISCO PARA LA BUSQUEDA.
-        //        CREAR DATABASE PARA INDEX
-
-
-//        localdisk.start();
-//        diskD.start();
-        // out.start();
-
-/*        synchronized (localdisk) {
+        synchronized (localdisk) {
             try {
                 localdisk.wait();
-                //diskD.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             for (String s : list) {
                 System.out.println(s);
             }
-        }*/
+        }
     }
 
-/*    Thread localdisk = new Thread(() -> {
-        find(nameFile, new File("C:\\"));
-    });
-
-
-    Thread diskD = new Thread(() -> {
-        find(nameFile, new File("D:\\"));
-    });
-
-    Thread out = new Thread(() -> {
-        try {
-            localdisk.join();
-            diskD.join();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    Thread localdisk = new Thread(() -> {
+        for (int i = 0; i < getDisks.length; i++){
+            find(nameFile, new File(getDisks[i]));
         }
-    });*/
+    });
 
     // find VBoxUSB.inf
     public void find(String fileToFind, File newFile) {
@@ -107,6 +85,7 @@ public class Finder {
             } else {
                 System.out.println(getDisks[0]);
             }
+            System.out.println("Results:\n");
         } else if (os.get_OS_NAME().contains(os.getEnumOSName().linux.toString())) {
             System.out.println("Hey Linux!! " + getDisks[0]);
         } else {
